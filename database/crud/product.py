@@ -56,10 +56,42 @@ class ProductCRUD:
             except IntegrityError as error:
                 raise HTTPException(
                     status_code=404,
-                    detail="Category not found"
+                    detail=error,
                 ) from error
             await session.refresh(db_category)
             return db_category
+
+    @classmethod
+    async def update(
+        cls,
+        product: pr.CreateProductSchema,
+        async_session: async_sessionmaker[AsyncSession],
+    ) -> Product:
+        "Couroutine for updating a product instance"
+        async with async_session() as session:
+            product_rows = await session.execute(
+                select(Product).filter(Product.id==product.id)
+            )
+            product_row = product_rows.scalar_one_or_none()
+
+            if not product_row:
+                raise HTTPException(
+                        status_code=404,
+                        detail="Product not found"
+                    )
+            for param, value in product:
+                if value is not None:
+                    setattr(product_row, param, value)
+
+            try:
+                await session.commit()
+            except IntegrityError as error:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Category not found"
+                ) from error
+            await session.refresh(product_row)
+            return product_row
 
 
     @classmethod

@@ -11,7 +11,7 @@ class CategorySwaggerSchema(CategoryBaseSchema):
 
     class Config:
         "config"
-        orm_mode = True
+        from_attributes = True
 
 class CategorySchema(CategoryBaseSchema):
     "Schema for creation and swagger response model"
@@ -19,4 +19,4 @@ class CategorySchema(CategoryBaseSchema):
 
     class Config:
         "config"
-        orm_mode = True
+        from_attributes = True

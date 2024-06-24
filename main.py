@@ -16,6 +16,7 @@ from schemas.product import (
     ProductJsonSwaggerSchema,
     CreateProductSchema,
     ProductSchema,
+    ProductJsonSwaggerUpdateSchema,
 )
 
 app = FastAPI(
@@ -76,6 +77,34 @@ async def create_category_by_form(name: str = Form()):
         async_session=session
     )
     return categoty_reponse
+
+
+@app.put("/category/update/form/{category_id}", response_model=CategorySchema)
+async def update_category_by_form(category_id: str, name: str = Form()):
+    "Endpoint updates a category instance"
+    category = CategorySchema(
+        id=category_id,
+        name=name,
+    )
+    category_response = await CategoryCRUD.update(
+        category=category,
+        async_session=session
+    )
+    return category_response
+
+
+@app.put("/category/update/json/{category_id}", response_model=CategorySchema)
+async def update_category_by_json(category_id: str, category_data: CategorySwaggerSchema):
+    "Endpoint updates a category instance"
+    category = CategorySchema(
+        id=category_id,
+        name=category_data.name,
+    )
+    category_response = await CategoryCRUD.update(
+        category=category,
+        async_session=session
+    )
+    return category_response
 
 
 @app.delete("/category/delete/{category_id}", response_model=dict)
@@ -168,6 +197,72 @@ async def create_product_by_form(
     return product_response
 
 
+@app.put("/product/update/form/{product_id}", response_model=ProductSchema)
+async def update_product_by_form(
+    product_id: str,
+    name: str = Form(),
+    description: str | None = Form(None),
+    price: Decimal | None = Form(None),
+    discount: int | None = Form(None),
+    quantity: int | None = Form(None),
+    category_id: str = Form(...),
+    image: UploadFile | None = File(None)
+):
+    "Endpoint updates a category instance"
+    image_path = None
+    if image:
+        image_path = await download_image(image.file.read(), f"{uuid.uuid4()}-{image.filename}")
+    product = CreateProductSchema(
+        id=product_id,
+        name=name,
+        description=description,
+        price=price,
+        discount=discount,
+        quantity=quantity,
+        category_id=category_id,
+        image=image_path,
+    )
+    product_response = await ProductCRUD.update(
+        product=product,
+        async_session=session
+    )
+    return product_response
+
+
+@app.put("/product/update/json/{product_id}", response_model=ProductSchema)
+async def update_product_by_json(product_id: str, product_data: ProductJsonSwaggerUpdateSchema):
+    "Endpoint updates a category instance"
+    image_path = None
+    if product_data.image_base64 and product_data.image_name:
+        image_data = base64.b64decode(product_data.image_base64)
+        image_name = f"{uuid.uuid4()}-{product_data.image_name}"
+        image_path = await download_image_base64(bytes_data=image_data, file_name=image_name)
+
+    product = CreateProductSchema(
+        id=product_id,
+        name=product_data.name,
+        description=product_data.description,
+        price=product_data.price,
+        discount=product_data.discount,
+        quantity=product_data.quantity,
+        category_id=product_data.category_id,
+        image=image_path
+    )
+    product_response = await ProductCRUD().update(
+        product=product,
+        async_session=session
+    )
+    return product_response
+
+
+@app.delete("/product/delete/{product_id}", response_model=dict)
+async def delete_product(product_id: str):
+    "Endpoint deletes a prooduct instance"
+    await ProductCRUD().delete(
+        product_id=product_id,
+        async_session=session
+    )
+    return {"message": "Deleted"}
 
 
 if __name__ == "__main__":

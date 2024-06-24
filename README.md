@@ -6,7 +6,7 @@
 
 1. Clone repository
 ```bash
-git clone https://...
+git clone https://github.com/Dasifue/FastShop
 ```
 
 2. Change directory

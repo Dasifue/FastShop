@@ -29,6 +29,6 @@ async def download_image_base64(bytes_data: bytes, file_name: str) -> str:
     "Coroutine download image in base64 encoding and returns file path"
     file_path = f"media/images/{file_name}"
     async with aiofiles.open(file=file_path, mode="wb") as file:
-        await file.write(base64.decodebytes(bytes_data))
+        await file.write(base64.encodebytes(bytes_data))
 
     return file_path

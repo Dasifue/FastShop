@@ -22,7 +22,7 @@ class CreateProductSchema(ProductBaseSchema):
 
     class Config:
         "config"
-        orm_mode = True
+        from_attributes = True
 
 class ProductFormSwaggerSchema(ProductBaseSchema):
     "Schema for swagger form creation"
@@ -30,7 +30,7 @@ class ProductFormSwaggerSchema(ProductBaseSchema):
 
     class Config:
         "config"
-        orm_mode = True
+        from_attributes = True
 
 class ProductJsonSwaggerSchema(ProductBaseSchema):
     "Schema for swagger json creation"
@@ -39,7 +39,7 @@ class ProductJsonSwaggerSchema(ProductBaseSchema):
 
     class Config:
         "config"
-        orm_mode = True
+        from_attributes = True
 
 class ProductSchema(ProductBaseSchema):
     "Schema for swagger response model"
@@ -49,4 +49,20 @@ class ProductSchema(ProductBaseSchema):
 
     class Config:
         "config"
-        orm_mode = True
+        from_attributes = True
+
+
+class ProductJsonSwaggerUpdateSchema(BaseModel):
+    "Schema for swagger json update"
+    name: str
+    description: str | None = None
+    price: Decimal | None = None
+    discount: int | None = None
+    quantity: int | None = None
+    category_id: str | None = None
+    image_base64: bytes | None = None
+    image_name: str | None = None
+
+    class Config:
+        "config"
+        from_attributes = True

@@ -63,6 +63,37 @@ class CategoryCRUD:
 
 
     @classmethod
+    async def update(
+        cls,
+        category: ct.CategorySchema,
+        async_session: async_sessionmaker[AsyncSession],
+    ) -> Category:
+        "Couroutine for updating a category instance"
+        async with async_session() as session:
+            category_rows = await session.execute(
+                select(Category).filter(Category.id==category.id)
+            )
+            category_row = category_rows.scalar_one_or_none()
+
+            if not category_row:
+                raise HTTPException(
+                        status_code=404,
+                        detail="Category not found"
+                    )
+
+            category_row.name = category.name
+            try:
+                await session.commit()
+            except IntegrityError as error:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Category with this name already exists"
+                ) from error
+            await session.refresh(category_row)
+            return category_row
+
+
+    @classmethod
     async def delete(
         cls,
         category_id: str,
