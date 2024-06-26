@@ -4,11 +4,10 @@ from decimal import Decimal
 from datetime import datetime
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.database import Base
 
-class Base(DeclarativeBase):
-    "class for sqlalchemy ORM system"
 
 class Category(Base):
     "product category model"

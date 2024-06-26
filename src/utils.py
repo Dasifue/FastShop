@@ -4,8 +4,7 @@ import base64
 
 import aiofiles
 
-from .database import engine
-from .models import Base
+from .database import engine, Base
 
 async def create_tables() -> None:
     "Coroutine creates tables using Base metadata"

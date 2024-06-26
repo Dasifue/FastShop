@@ -2,10 +2,14 @@
 
 import os
 
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from dotenv import load_dotenv
 
 load_dotenv(".env")
+
+class Base(DeclarativeBase):
+    "class for sqlalchemy ORM system"
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
