@@ -2,7 +2,8 @@
 
 from .models import (
     Category,
-    Product
+    Product,
+    Base,
 )
 
 from .utils import (
@@ -12,7 +13,8 @@ from .utils import (
 )
 
 from .database import (
-    session
+    session,
+    engine,
 )
 
 from . import crud

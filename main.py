@@ -266,12 +266,12 @@ async def delete_product(product_id: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Using with database")
-    parser.add_argument("extra", nargs="?", default=None)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description="Using with database")
+    # parser.add_argument("extra", nargs="?", default=None)
+    # args = parser.parse_args()
 
-    if args.extra == "create_tables":
-        asyncio.run(create_tables())
+    # if args.extra == "create_tables":
+    #     asyncio.run(create_tables())
 
     uvicorn.run(
         app=app,
